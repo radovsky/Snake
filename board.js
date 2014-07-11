@@ -5,34 +5,35 @@
 	var SnakeGame = root.SnakeGame = (root.SnakeGame || {});
 
 	var Board = SnakeGame.Board = function(ctx, dimX, dimY) {
-		this.FPS = 50;
+		this.STEP_MS = 60;
 		this.ctx = ctx;
+		ctx.canvas.setAttribute('style', 'border: 1px solid black;');
 
 		if (dimX && dimY) {
-			ctx.canvas.setAttribute('style', 'border: 1px solid black;');
 			ctx.canvas.width = dimX;
 			ctx.canvas.height = dimY;
 		} else {
-			ctx.canvas.width = window.innerWidth;
-			ctx.canvas.height = window.innerHeight;
+			ctx.canvas.width = window.innerWidth - 2;
+			ctx.canvas.height = window.innerHeight - 2;
 		}
 
 		this.dimX = ctx.canvas.width;
 		this.dimY = ctx.canvas.height;
-		console.log('x: ' + ctx.canvas.width);
-		console.log('y: ' + ctx.canvas.height);
 
 		this.snake = new SnakeGame.Snake([10, 0]);
 		this.apple = this.createApple();
 		this.applesEaten = 0;
+		
+		this.paused = false;
+		this.bindKeyHandlers();
 	};
 
 	Board.prototype.createApple = function() {
-
+		
 		var randomX = Math.floor(Math.random() * (this.dimX / 10)) * 10 + 5;
 		var randomY = Math.floor(Math.random() * (this.dimY / 10)) * 10 + 5;
 
-
+		if (this.snake.overlaps([randomX, randomY])) this.createApple(); 
 
 		return [randomX, randomY];
 	};
@@ -41,7 +42,7 @@
 		var board = this;
 		this.timerId = window.setInterval(function() {
 			board.step();
-		}, board.FPS);
+		}, board.STEP_MS);
 	};
 
 	Board.prototype.render = function() {
@@ -86,7 +87,8 @@
 	};
 
 	Board.prototype.step = function() {
-		this.turn();
+		// this.pause();
+		// this.turn();
 		this.snake.move();
 		if (this.appleCollide()) {
 			this.apple = this.createApple();
@@ -96,25 +98,46 @@
 			this.render();
 		}
 	};
-	
-	// ugly. fix.
-	Board.prototype.turn = function() {
-		var dir = this.snake.dir;
-		if (key.isPressed("up") && !(dir[0] === 0 && dir[1] === 10)) this.snake.dir = [0, -10];
-		if (key.isPressed("down") && !(dir[0] === 0 && dir[1] === -10)) this.snake.dir = [0, 10];
-		if (key.isPressed("right") && !(dir[0] === -10 && dir[1] === 0)) this.snake.dir = [10, 0];
-		if (key.isPressed("left") && !(dir[0] === 10 && dir[1] === 0)) this.snake.dir = [-10, 0];
+
+	Board.prototype.bindKeyHandlers = function() {
+		var that = this;
+		key("space", function(){
+			if (that.paused) {
+				that.paused = false;
+				that.start();
+			} else {
+				that.paused = true;
+				that.stop();
+			}
+		});
+		
+		key("up", function(){
+			if (!(that.snake.dir[0] === 0 && that.snake.dir[1] === 10)) {
+				that.snake.dir = [0, -10];
+			}
+		});
+		
+		key("down", function(){
+			if (!(that.snake.dir[0] === 0 && that.snake.dir[1] === -10)) {
+				that.snake.dir = [0, 10];
+			}
+		});
+		
+		key("right", function(){
+			if (!(that.snake.dir[0] === -10 && that.snake.dir[1] === 0)) {
+				that.snake.dir = [10, 0];
+			}
+		});
+		
+		key("left", function(){
+			if (!(that.snake.dir[0] === 10 && that.snake.dir[1] === 0)) {
+				that.snake.dir = [-10, 0];
+			}
+		});
 	};
-	
-	// this is just a patch. need to fix bug where snake continues
-	// in direction it was going when it ran into itself.
+
 	Board.prototype.restart = function() {
 		location.reload();
-		// this.stop();
-		// var canvas = document.getElementsByTagName('canvas')[0];
-		// var g = new SnakeGame.Board(canvas.getContext('2d'));
-		// g.snake = new SnakeGame.Snake([10, 0]);
-		// g.start();
 	};
 
 	Board.prototype.appleCollide = function() {
@@ -133,9 +156,11 @@
 				this.snake.segments[i][1] === head[1]) {
 				this.stop();
 				
-				if (confirm("Stop eating yourself.\nYou ate " + this.applesEaten + " apples though!\n\nPlay again?")) {
-					this.restart();
-				}
+				alert(
+					"Stop eating yourself.\nYou ate " + 
+					this.applesEaten + " apples though!\n\nPlay again?"
+				);
+				this.restart();
 			}
 		}
 	};
@@ -145,9 +170,11 @@
 		if (head[0] < 0 || head[0] > this.dimX || head[1] < 0 || head[1] > this.dimY) {
 			this.stop();
 		
-			if (confirm("Nice faceplant.\nYou ate " + this.applesEaten + " apples though!\n\nPlay again?")) {
-				this.restart();
-			}
+			alert(
+				"Nice faceplant.\nYou ate " + 
+				this.applesEaten + " apples though!\n\nPlay again?"
+			);
+			this.restart();
 		}
 	};
 

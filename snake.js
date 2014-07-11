@@ -21,4 +21,13 @@
     }
   };
   
+  Snake.prototype.overlaps = function(pos) {
+	  for (var i = 0; i < this.segments.length; i++) {
+		  if (this.segments[i][0] === pos[0] && this.segments[i][1] === pos[1]) {
+			  return true;
+		  }
+	  }
+	  return false;
+  };
+  
 })(this);
