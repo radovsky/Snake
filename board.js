@@ -8,13 +8,19 @@
 		this.STEP_MS = 60;
 		this.ctx = ctx;
 		ctx.canvas.setAttribute('style', 'border: 1px solid black;');
+		
+		var correctWidth = Math.round(window.innerWidth / 10) * 10 + 2;
+		if (correctWidth > window.innerWidth) correctWidth -= 10;
+		
+		var correctHeight = Math.round(window.innerHeight / 10) * 10 + 2;
+		if (correctHeight > window.innerHeight) correctHeight -= 10;
 
 		if (dimX && dimY) {
 			ctx.canvas.width = dimX;
 			ctx.canvas.height = dimY;
 		} else {
-			ctx.canvas.width = window.innerWidth - 2;
-			ctx.canvas.height = window.innerHeight - 2;
+			ctx.canvas.width = correctWidth - 2;
+			ctx.canvas.height = correctHeight - 2;
 		}
 
 		this.dimX = ctx.canvas.width;
