@@ -3,14 +3,15 @@
   <script src="keymaster.js"></script>
   <script src="snake.js"></script>
   <script src="board.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://reset5.googlecode.com/hg/reset.min.css"></style>
 </header>
 
 <body>
-  <canvas width='800' height='600' style="border:1px solid #000000;"></canvas>
+  <canvas></canvas>
   
   <script>
     var canvas = document.getElementsByTagName('canvas')[0];
-    var g = new SnakeGame.Board(canvas.getContext('2d'), 800, 600);
+    var g = new SnakeGame.Board(canvas.getContext('2d'));
     g.start();
   </script>
 </body>

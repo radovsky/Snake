@@ -2,9 +2,9 @@
 
   var SnakeGame = root.SnakeGame = (root.SnakeGame || {});
 
-  var Snake = SnakeGame.Snake = function(dir, numSegments) {
+  var Snake = SnakeGame.Snake = function(dir, growthRate) {
     this.dir = dir;
-    this.segments = [[305,305], [305,305], [305,305], [305,305]];
+    this.segments = [[55, 55], [55, 55], [55, 55]];
   };
   
   Snake.prototype.move = function() {
