@@ -24,6 +24,7 @@
 
 		this.snake = new SnakeGame.Snake([10, 0]);
 		this.apple = this.createApple();
+		this.applesEaten = 0;
 	};
 
 	Board.prototype.createApple = function() {
@@ -95,24 +96,31 @@
 			this.render();
 		}
 	};
-
+	
+	// ugly. fix.
 	Board.prototype.turn = function() {
-		if (key.isPressed("up")) this.snake.dir = [0, -10];
-		if (key.isPressed("down")) this.snake.dir = [0, 10];
-		if (key.isPressed("right")) this.snake.dir = [10, 0];
-		if (key.isPressed("left")) this.snake.dir = [-10, 0];
+		var dir = this.snake.dir;
+		if (key.isPressed("up") && !(dir[0] === 0 && dir[1] === 10)) this.snake.dir = [0, -10];
+		if (key.isPressed("down") && !(dir[0] === 0 && dir[1] === -10)) this.snake.dir = [0, 10];
+		if (key.isPressed("right") && !(dir[0] === -10 && dir[1] === 0)) this.snake.dir = [10, 0];
+		if (key.isPressed("left") && !(dir[0] === 10 && dir[1] === 0)) this.snake.dir = [-10, 0];
 	};
 	
+	// this is just a patch. need to fix bug where snake continues
+	// in direction it was going when it ran into itself.
 	Board.prototype.restart = function() {
-		this.stop();
-		var canvas = document.getElementsByTagName('canvas')[0];
-		var g = new SnakeGame.Board(canvas.getContext('2d'));
-		g.start();
+		location.reload();
+		// this.stop();
+		// var canvas = document.getElementsByTagName('canvas')[0];
+		// var g = new SnakeGame.Board(canvas.getContext('2d'));
+		// g.snake = new SnakeGame.Snake([10, 0]);
+		// g.start();
 	};
 
 	Board.prototype.appleCollide = function() {
 		if (this.snake.segments[0][0] === this.apple[0] &&
 			this.snake.segments[0][1] === this.apple[1]) {
+			this.applesEaten += 1;
 			return true;
 		}
 		return false;
@@ -125,7 +133,7 @@
 				this.snake.segments[i][1] === head[1]) {
 				this.stop();
 				
-				if (confirm("stop eating yourself\n\nplay again?")) {
+				if (confirm("Stop eating yourself.\nYou ate " + this.applesEaten + " apples though!\n\nPlay again?")) {
 					this.restart();
 				}
 			}
@@ -137,7 +145,7 @@
 		if (head[0] < 0 || head[0] > this.dimX || head[1] < 0 || head[1] > this.dimY) {
 			this.stop();
 		
-			if (confirm("nice faceplant\n\nplay again?")) {
+			if (confirm("Nice faceplant.\nYou ate " + this.applesEaten + " apples though!\n\nPlay again?")) {
 				this.restart();
 			}
 		}
