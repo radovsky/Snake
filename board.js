@@ -43,6 +43,15 @@
 
 		return [randomX, randomY];
 	};
+	
+	// Bonus.prototype.randomBonus = function() {
+	//   		var rando = Math.floor(Math.random() * 2);
+	// 	if (rando === 0) {
+	// 		return this.speedUp();
+	// 	} else if (rando === 1) {
+	// 		return this.slowDown();
+	// 	}
+	// };
 
 	Board.prototype.start = function() {
 		var board = this;
@@ -145,10 +154,14 @@
 	Board.prototype.restart = function() {
 		location.reload();
 	};
+	
+	Board.prototype.snakeCollide = function(pos) {
+		var head = this.snake.segments[0];
+		return head[0] === pos[0] && head[1] === pos[1];
+	};
 
 	Board.prototype.appleCollide = function() {
-		if (this.snake.segments[0][0] === this.apple[0] &&
-			this.snake.segments[0][1] === this.apple[1]) {
+		if (this.snakeCollide(this.apple)) {
 			this.applesEaten += 1;
 			return true;
 		}
