@@ -4,10 +4,14 @@
 
 	var SnakeGame = root.SnakeGame = (root.SnakeGame || {});
 
-	var Snake = SnakeGame.Snake = function(dir, growthRate) {
+	var Snake = SnakeGame.Snake = function(dir, growthRate, startingSize) {
 		this.dir = dir || [10, 0];
 		this.growthRate = growthRate || 3;
-		this.segments = [[155, 155], [155, 155], [155, 155]];
+		this.startingSize = startingSize || 300;
+		this.segments = [];
+		for (var i = 0; i < this.startingSize; i++) {
+			this.segments.push([155, 155]);
+		}
 	};
 
 	Snake.prototype.move = function() {

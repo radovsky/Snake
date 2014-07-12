@@ -35,11 +35,12 @@
 	};
 
 	Board.prototype.createApple = function() {
-		
 		var randomX = Math.floor(Math.random() * (this.dimX / 10)) * 10 + 5;
 		var randomY = Math.floor(Math.random() * (this.dimY / 10)) * 10 + 5;
 
-		if (this.snake.overlaps([randomX, randomY])) this.createApple(); 
+		if (this.snake.overlaps([randomX, randomY])){
+			return this.createApple(); 
+		}
 
 		return [randomX, randomY];
 	};
@@ -66,11 +67,12 @@
 		this.snake.segments.forEach(function(segment) {
 			that.drawSegment(that.ctx, segment);
 		});
-		this.drawApple(this.ctx, this.apple);
+		this.drawEdible(this.ctx, this.apple);
 	};
 
-	Board.prototype.drawApple = function(ctx, pos) {
-		ctx.fillStyle = 'red';
+	Board.prototype.drawEdible = function(ctx, pos, color) {
+		// apple is default
+		ctx.fillStyle = color || 'red';
 		ctx.beginPath();
 
 		ctx.arc(
@@ -171,10 +173,8 @@
 	Board.prototype.checkSelfCollisions = function() {
 		var head = this.snake.segments[0];
 		for (var i = 1; i < this.snake.segments.length; i++) {
-			if (this.snake.segments[i][0] === head[0] &&
-				this.snake.segments[i][1] === head[1]) {
+			if (this.snakeCollide(this.snake.segments[i])) {
 				this.stop();
-				
 				alert(
 					"Stop eating yourself.\nYou ate " + 
 					this.applesEaten + " apples though!\n\nPlay again?"

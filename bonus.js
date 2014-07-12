@@ -10,11 +10,11 @@
 	};
   
 	Bonus.prototype.speedUp = function() {
-  	
+  		this.board.STEP_MS = this.board.STEP_MS / 1.5
 	};
   
 	Bonus.prototype.slowDown = function() {
-  	
+  		this.board.STEP_MS = this.board.STEP_MS * 1.5
 	};
   
 	Bonus.prototype.yourChoice = function() {
