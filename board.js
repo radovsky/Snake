@@ -104,8 +104,6 @@
 	};
 
 	Board.prototype.step = function() {
-		// this.pause();
-		// this.turn();
 		this.snake.move();
 		if (this.appleCollide()) {
 			this.apple = this.createApple();
