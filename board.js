@@ -19,8 +19,8 @@
 			ctx.canvas.width = dimX;
 			ctx.canvas.height = dimY;
 		} else {
-			ctx.canvas.width = correctWidth - 2;
-			ctx.canvas.height = correctHeight - 2;
+			ctx.canvas.width = correctWidth - 12;
+			ctx.canvas.height = correctHeight - 12;
 		}
 
 		this.dimX = ctx.canvas.width;
